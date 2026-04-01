@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 const SKILLS = [
   'Data cleaning',
   'Data preparation',
@@ -71,12 +69,12 @@ function LearnerHome() {
               <h1 className="cds-title-xs text-[var(--cds-color-grey-975)] mt-4">
                 Exploring taxi rides in Chicago
               </h1>
-              <Link
-                to="/author"
+              <a
+                href="/author"
                 className="inline-flex items-center justify-center mt-16 px-24 py-12 rounded-[var(--cds-border-radius-100)] bg-[var(--cds-color-blue-700)] text-[var(--cds-color-white)] cds-action-primary hover:bg-[var(--cds-color-blue-800)]"
               >
                 Start lab
-              </Link>
+              </a>
             </div>
             <div className="flex-shrink-0 w-[200px] h-[140px] flex items-center justify-center">
               <img
