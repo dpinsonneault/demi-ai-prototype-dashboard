@@ -7,7 +7,7 @@ interface CourseRowProps {
 
 export function CourseRow({ courses }: CourseRowProps) {
   return (
-    <div className="flex gap-16 overflow-x-auto pb-4" style={{ scrollbarWidth: "none" }}>
+    <div className="flex gap-16 overflow-x-auto p-12 -m-12" style={{ scrollbarWidth: "none" }}>
       {courses.map((course) => (
         <CourseCard key={course.id} course={course} />
       ))}

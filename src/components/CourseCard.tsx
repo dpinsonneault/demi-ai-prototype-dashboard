@@ -6,7 +6,7 @@ interface CourseCardProps {
 
 export function CourseCard({ course }: CourseCardProps) {
   return (
-    <div className="bg-white border border-grey-100 rounded-16 overflow-hidden flex-shrink-0 flex flex-col cursor-pointer p-8" style={{ minWidth: 240, flex: "1 0 0" }}>
+    <div className="bg-white border border-grey-100 rounded-16 overflow-hidden flex-shrink-0 flex flex-col cursor-pointer p-8 transition-all duration-normal hover:scale-[1.02] hover:shadow-elevation-2" style={{ minWidth: 240, flex: "1 0 0" }}>
       {/* Thumbnail */}
       <div className="relative w-full overflow-hidden rounded-8" style={{ aspectRatio: "304 / 171" }}>
         <img

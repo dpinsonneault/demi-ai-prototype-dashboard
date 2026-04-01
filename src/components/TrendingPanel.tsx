@@ -2,7 +2,7 @@ import type { TrendingPanelData, TrendingCourseData } from "../data/mockData";
 
 function TrendingCourseRow({ course }: { course: TrendingCourseData }) {
   return (
-    <div className="bg-white rounded-8 p-8 flex gap-12 items-center cursor-pointer hover:shadow-elevation-1 transition-shadow duration-fast h-80">
+    <div className="bg-white rounded-8 p-8 flex gap-12 items-center cursor-pointer transition-all duration-normal hover:scale-[1.02] hover:shadow-elevation-2 h-80">
       {/* Thumbnail */}
       <div className="flex-shrink-0 size-64 rounded-4 overflow-hidden">
         <img
@@ -60,7 +60,7 @@ interface TrendingPanelProps {
 export function TrendingPanel({ label, courses }: TrendingPanelProps) {
   return (
     <div
-      className="flex flex-col gap-14 p-14 rounded-16 w-full md:flex-1"
+      className="flex flex-col gap-14 p-14 rounded-16 w-full md:flex-1 min-w-0"
       style={{ backgroundColor: "#e3eeff" }}
     >
       <p className="cds-subtitle-md text-black">{label}</p>
