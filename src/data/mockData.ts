@@ -112,12 +112,14 @@ export const learnerContext: LearnerContext = {
   videoSrc: "/images/course-preview.png",
 };
 
+export const skillAreaName = "Data Acquisition And Preparation";
+
 export const skillBars: SkillBarData[] = [
-  { name: "Data Integrity & Literacy", completed: 1500, total: 1500 },
-  { name: "Visualizing and Reporting Clean Data", completed: 255, total: 1500 },
+  { name: "Define what data is needed to answer a business problem", completed: 1500, total: 1500 },
+  { name: "Map relationships and keys across datasets", completed: 255, total: 1500 },
   {
-    name: "Preparing and Cleaning Data",
-    completed: 120,
+    name: "Decide on appropriate data formats and levels of detail",
+    completed: 400,
     total: 1500,
     nextCourse: {
       title: "Google Advanced Data Analytics",
@@ -129,8 +131,8 @@ export const skillBars: SkillBarData[] = [
     },
   },
   {
-    name: "Connecting and Importing Data",
-    completed: 0,
+    name: "Identify relevant data sources across multiple systems",
+    completed: 255,
     total: 1500,
     nextCourse: {
       title: "Designing, Modeling, and Implementing Data Warehouses",
@@ -141,7 +143,7 @@ export const skillBars: SkillBarData[] = [
       rating: 4.7,
     },
   },
-  { name: "Prepare Datasets in Power BI", completed: 0, total: 1500 },
+  { name: "Document a clear data collection and integration plan", completed: 0, total: 1500 },
 ];
 
 export const todayGoals: GoalItem[] = [

@@ -5,31 +5,28 @@ import type { LearnerContext, GoalItem } from "../data/mockData";
 interface ProgressBannerProps {
   learner: LearnerContext;
   goals: GoalItem[];
+  flowerRef?: React.RefObject<HTMLDivElement | null>;
+  heroCompleteIndex?: number;
+  heroCompleted?: boolean;
 }
 
-export function ProgressBanner({ learner, goals }: ProgressBannerProps) {
+export function ProgressBanner({ learner, goals, flowerRef, heroCompleteIndex, heroCompleted }: ProgressBannerProps) {
   return (
     <section className="w-full pt-32">
       <div className="px-16 md:max-w-[1113px] md:mx-auto md:px-24 flex flex-col gap-8">
 
         {/* Greeting line */}
-        <p className="cds-subtitle-md text-grey-975">
+        <p className="cds-subtitle-md text-grey-600">
           Hi {learner.userName}, you're a{" "}
-          <span className="inline-flex items-center px-12 py-4 bg-white/60 rounded-32 cds-action-secondary text-grey-975">
+          <span className="inline-flex items-center mx-4 px-12 py-4 bg-white/60 rounded-32 cds-action-secondary text-grey-975">
             {learner.occupationGroup}
           </span>{" "}
           currently working towards
         </p>
 
         {/* Job task + demand badge */}
-        <div className="flex flex-col md:flex-row md:items-center gap-12 pb-16">
+        <div className="pb-16">
           <h1 className="cds-title-sm text-grey-975">{learner.jobTask}</h1>
-          <div className="flex items-center gap-6 h-32 px-12 rounded-32 self-start flex-shrink-0 bg-grey-975">
-            <span className="material-symbols-rounded text-white" style={{ fontSize: 16 }}>rocket_launch</span>
-            <span className="cds-action-secondary text-white whitespace-nowrap">
-              +{learner.jobDemandPercent}% job demand
-            </span>
-          </div>
         </div>
 
         {/* 3-column card */}
@@ -68,7 +65,7 @@ export function ProgressBanner({ learner, goals }: ProgressBannerProps) {
 
           {/* Right: goals panel */}
           <div className="md:w-[280px] flex-shrink-0 border-t md:border-t-0 md:border-l border-grey-100 pt-16 md:pt-0 md:pl-24">
-            <GoalsPanel goals={goals} />
+            <GoalsPanel goals={goals} flowerRef={flowerRef} heroCompleteIndex={heroCompleteIndex} heroCompleted={heroCompleted} />
           </div>
         </div>
       </div>

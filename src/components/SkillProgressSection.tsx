@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { CalendarWidget } from "./CalendarWidget";
 import type {
   SkillBarData,
-  CertificateData,
   CalendarDayActivity,
   StreakInfo,
 } from "../data/mockData";
 
 interface SkillProgressSectionProps {
+  skillAreaName: string;
   skills: SkillBarData[];
-  certificates: CertificateData[];
   calendarActivity: CalendarDayActivity[];
   streakInfo: StreakInfo;
 }
@@ -17,15 +15,13 @@ interface SkillProgressSectionProps {
 const TABS = ["Overview", "Skills", "In progress", "Saved", "Certificates"];
 
 export function SkillProgressSection({
+  skillAreaName,
   skills,
-  certificates,
   calendarActivity,
   streakInfo,
 }: SkillProgressSectionProps) {
-  const [expanded, setExpanded] = useState(false);
-
   const focusSkill = skills
-    .filter((s) => s.completed < s.total)
+    .filter((s) => s.completed < s.total && s.nextCourse)
     .sort((a, b) => a.completed / a.total - b.completed / b.total)[0];
 
   return (
@@ -52,27 +48,23 @@ export function SkillProgressSection({
         <div className="flex-1 min-w-0 flex flex-col gap-32">
           {/* Focus skill */}
           <div>
-            <h3 className="cds-subtitle-md text-grey-975 mb-16">Skill progress</h3>
+            <h3 className="cds-subtitle-md text-grey-975 mb-16">{skillAreaName}</h3>
 
-            {focusSkill && (
-              <div className="bg-grey-25 rounded-16 p-16 flex flex-col gap-16">
-                {/* Rationale */}
-                <div className="flex items-center gap-8">
-                  <img
-                    src="/status/AIGenerateBranded.svg"
-                    alt=""
-                    className="size-16 flex-shrink-0"
-                  />
-                  <span className="cds-body-secondary text-grey-600">
-                    Recommended next — biggest opportunity for growth
-                  </span>
-                </div>
-
-                {/* Progress bar */}
-                <SkillBar skill={focusSkill} />
-
-                {/* Suggested course */}
-                {focusSkill.nextCourse && (
+            <div className="flex flex-col gap-16">
+              {/* Recommended next action — shown first */}
+              {focusSkill?.nextCourse && (
+                <div className="bg-grey-25 rounded-16 p-16 flex flex-col gap-12">
+                  <div className="flex items-center gap-8">
+                    <img
+                      src="/status/AIGenerateBranded.svg"
+                      alt=""
+                      className="size-16 flex-shrink-0"
+                    />
+                    <span className="cds-body-secondary text-grey-600">
+                      Recommended next — biggest opportunity for growth
+                    </span>
+                  </div>
+                  <SkillBar skill={focusSkill} />
                   <div className="flex items-center gap-12 bg-white rounded-8 p-12 cursor-pointer transition-all duration-normal hover:scale-[1.02] hover:shadow-elevation-2">
                     <img
                       src={focusSkill.nextCourse.thumbnail}
@@ -113,42 +105,15 @@ export function SkillProgressSection({
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-            )}
+                </div>
+              )}
 
-            {/* Toggle */}
-            <button
-              onClick={() => setExpanded((v) => !v)}
-              className="flex items-center gap-4 mt-16 cds-action-secondary text-blue-700 hover:text-blue-800 hover:bg-blue-25 px-12 py-8 rounded-8 transition-colors duration-fast -ml-12"
-            >
-              View all {skills.length} skills
-              <span
-                className="material-symbols-rounded"
-                style={{ fontSize: 20 }}
-              >
-                {expanded ? "expand_less" : "expand_more"}
-              </span>
-            </button>
-
-            {/* Collapsible grid */}
-            {expanded && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-16 mt-16">
-                {skills.map((skill, i) => (
+              {/* Remaining job tasks */}
+              {skills
+                .filter((s) => !focusSkill || s.name !== focusSkill.name)
+                .map((skill, i) => (
                   <SkillBar key={i} skill={skill} />
                 ))}
-              </div>
-            )}
-          </div>
-
-
-          {/* Recent certificates */}
-          <div>
-            <h3 className="cds-subtitle-md text-grey-975 mb-16">Recent certificates</h3>
-            <div className="flex flex-col gap-16">
-              {certificates.map((cert, i) => (
-                <CertificateRow key={i} certificate={cert} />
-              ))}
             </div>
           </div>
         </div>
@@ -191,30 +156,3 @@ function SkillBar({ skill }: { skill: SkillBarData }) {
   );
 }
 
-function CertificateRow({ certificate }: { certificate: CertificateData }) {
-  return (
-    <div className="flex items-center gap-16 p-16 bg-grey-25 rounded-16 cursor-pointer transition-all duration-normal hover:scale-[1.02] hover:shadow-elevation-2">
-      <div className="flex-shrink-0 size-48 rounded-8 overflow-hidden flex items-center justify-center bg-grey-25">
-        <img
-          src={certificate.logoSrc}
-          alt=""
-          className="max-w-full max-h-full object-contain"
-        />
-      </div>
-      <div className="flex flex-col gap-4 flex-1 min-w-0">
-        <p className="cds-action-secondary text-grey-975">{certificate.title}</p>
-        <div className="flex items-center gap-12">
-          {certificate.actions.map((action) => (
-            <a
-              key={action.label}
-              href={action.href}
-              className="cds-body-secondary text-blue-700 hover:underline"
-            >
-              {action.label}
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}

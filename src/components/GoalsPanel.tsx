@@ -4,13 +4,10 @@ import { FlowerProgress } from "./FlowerProgress";
 
 interface GoalsPanelProps {
   goals: GoalItem[];
+  flowerRef?: React.RefObject<HTMLDivElement | null>;
+  heroCompleteIndex?: number;
+  heroCompleted?: boolean;
 }
-
-const GOAL_STAR_FILTERS = [
-  "hue-rotate(330deg) saturate(1.5) brightness(1.05)",
-  "hue-rotate(60deg) saturate(1.8) brightness(1.1)",
-  "hue-rotate(100deg) saturate(1.6) brightness(1.05)",
-];
 
 function OdometerDigit({ value, max }: { value: number; max: number }) {
   const digits = Array.from({ length: max + 1 }, (_, i) => i);
@@ -38,8 +35,18 @@ function OdometerDigit({ value, max }: { value: number; max: number }) {
   );
 }
 
-export function GoalsPanel({ goals: initialGoals }: GoalsPanelProps) {
-  const [goals, setGoals] = useState(initialGoals.map((g) => ({ ...g })));
+export function GoalsPanel({ goals: initialGoals, flowerRef, heroCompleteIndex, heroCompleted }: GoalsPanelProps) {
+  const [goals, setGoals] = useState(() =>
+    initialGoals.map((g) => ({ ...g }))
+  );
+
+  useEffect(() => {
+    if (heroCompleted && heroCompleteIndex !== undefined) {
+      setGoals((prev) =>
+        prev.map((g, i) => (i === heroCompleteIndex ? { ...g, completed: true } : g))
+      );
+    }
+  }, [heroCompleted, heroCompleteIndex]);
   const [pulseKey, setPulseKey] = useState(0);
   const [flashIndex, setFlashIndex] = useState<number | null>(null);
   const [bounceIndex, setBounceIndex] = useState<number | null>(null);
@@ -83,6 +90,7 @@ export function GoalsPanel({ goals: initialGoals }: GoalsPanelProps) {
     <div className="flex flex-col gap-12 h-full">
       {/* Flower illustration on peach background */}
       <div
+        ref={flowerRef}
         className={`flex items-center justify-center rounded-[20px] w-full overflow-hidden ${celebrating ? "celebration" : ""}`}
         style={{ backgroundColor: "#fff4e8", minHeight: 156 }}
       >
@@ -104,29 +112,20 @@ export function GoalsPanel({ goals: initialGoals }: GoalsPanelProps) {
           {goals.map((goal, i) => (
             <li
               key={i}
-              className={`goal-enter flex items-center gap-8 cursor-pointer select-none rounded-8 py-8 pr-8 transition-colors duration-fast hover:bg-white ${flashIndex === i ? "goal-flash" : ""}`}
+              className={`goal-enter flex items-center gap-8 select-none rounded-8 py-8 pr-8 ${flashIndex === i ? "goal-flash" : ""}`}
               style={{ animationDelay: `${i * 80}ms` }}
-              onClick={() => toggle(i)}
-              role="checkbox"
-              aria-checked={goal.completed}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === " " || e.key === "Enter") {
-                  e.preventDefault();
-                  toggle(i);
-                }
-              }}
             >
-              <img
-                src={goal.completed ? "/star-complete.svg" : "/star.svg"}
-                alt=""
-                className={`flex-shrink-0 transition-all duration-normal ${bounceIndex === i ? "star-bounce" : ""}`}
+              <span
+                className={`material-symbols-rounded flex-shrink-0 transition-all duration-normal ${bounceIndex === i ? "star-bounce" : ""} ${goal.completed ? "text-blue-700" : "text-grey-400"}`}
                 style={{
-                  width: 20,
-                  height: 20,
-                  filter: GOAL_STAR_FILTERS[i] ?? undefined,
+                  fontSize: 20,
+                  fontVariationSettings: goal.completed
+                    ? "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24"
+                    : "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
                 }}
-              />
+              >
+                {goal.completed ? "check_circle" : "circle"}
+              </span>
               <span
                 className={`strike-animate cds-body-tertiary ${goal.completed ? "text-grey-400 struck" : "text-grey-600"}`}
               >
