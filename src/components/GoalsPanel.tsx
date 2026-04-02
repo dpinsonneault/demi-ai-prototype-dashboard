@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import type { GoalItem } from "../data/mockData";
 import { FlowerProgress } from "./FlowerProgress";
 
@@ -47,54 +47,18 @@ export function GoalsPanel({ goals: initialGoals, flowerRef, heroCompleteIndex, 
       );
     }
   }, [heroCompleted, heroCompleteIndex]);
-  const [pulseKey, setPulseKey] = useState(0);
-  const [flashIndex, setFlashIndex] = useState<number | null>(null);
-  const [bounceIndex, setBounceIndex] = useState<number | null>(null);
-  const [celebrating, setCelebrating] = useState(false);
-  const flashTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const bounceTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const celebrationTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const prevCompleted = useRef(0);
 
   const completedCount = goals.filter((g) => g.completed).length;
-
-  useEffect(() => {
-    if (completedCount === goals.length && prevCompleted.current < goals.length) {
-      setCelebrating(true);
-      clearTimeout(celebrationTimeout.current);
-      celebrationTimeout.current = setTimeout(() => setCelebrating(false), 1000);
-    }
-    prevCompleted.current = completedCount;
-  }, [completedCount, goals.length]);
-
-  function toggle(index: number) {
-    const wasCompleted = goals[index].completed;
-    setGoals((prev) =>
-      prev.map((g, i) => (i === index ? { ...g, completed: !g.completed } : g))
-    );
-
-    if (!wasCompleted) {
-      setPulseKey((k) => k + 1);
-
-      setFlashIndex(index);
-      clearTimeout(flashTimeout.current);
-      flashTimeout.current = setTimeout(() => setFlashIndex(null), 600);
-
-      setBounceIndex(index);
-      clearTimeout(bounceTimeout.current);
-      bounceTimeout.current = setTimeout(() => setBounceIndex(null), 350);
-    }
-  }
 
   return (
     <div className="flex flex-col gap-12 h-full">
       {/* Flower illustration on peach background */}
       <div
         ref={flowerRef}
-        className={`flex items-center justify-center rounded-[20px] w-full overflow-hidden ${celebrating ? "celebration" : ""}`}
+        className="flex items-center justify-center rounded-[20px] w-full overflow-hidden"
         style={{ backgroundColor: "#fff4e8", minHeight: 156 }}
       >
-        <div key={pulseKey} className={`flower-sway ${!celebrating ? "flower-pulse" : ""}`}>
+        <div className="flower-sway flower-pulse">
           <FlowerProgress completedCount={completedCount} />
         </div>
       </div>
@@ -112,11 +76,11 @@ export function GoalsPanel({ goals: initialGoals, flowerRef, heroCompleteIndex, 
           {goals.map((goal, i) => (
             <li
               key={i}
-              className={`goal-enter flex items-center gap-8 select-none rounded-8 py-8 pr-8 ${flashIndex === i ? "goal-flash" : ""}`}
+              className="goal-enter flex items-center gap-8 select-none rounded-8 py-8 pr-8"
               style={{ animationDelay: `${i * 80}ms` }}
             >
               <span
-                className={`material-symbols-rounded flex-shrink-0 transition-all duration-normal ${bounceIndex === i ? "star-bounce" : ""} ${goal.completed ? "text-blue-700" : "text-grey-400"}`}
+                className={`material-symbols-rounded flex-shrink-0 transition-all duration-normal ${goal.completed ? "text-blue-700" : "text-grey-400"}`}
                 style={{
                   fontSize: 20,
                   fontVariationSettings: goal.completed
